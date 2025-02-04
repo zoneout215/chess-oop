@@ -1,7 +1,7 @@
 
 ## 🔄 Fork Information
 
-This project is a fork of the original chess game created by [Sergey Zhukov]. The base game logic and structure have been preserved, with additional enhancements made to specific chess moves.
+This project is a fork of the original chess game created by [Sergey Zhukov](https://github.com/zhukovsd/chess). The base game logic and structure have been preserved, with additional enhancements made to specific chess moves.
 
 ## 🚀 Extended Functionality
 
@@ -26,5 +26,5 @@ The castling mechanism has been refined to provide a smoother experience. Both k
 
 ## 🙏 Acknowledgements
 
-A huge thank you to ![Sergey Zhukov](https://github.com/zhukovsd) for creating the base chess game that served as the foundation for this enhanced version. Their work has been instrumental in making these improvements possible.
+A huge thank you to [Sergey Zhukov](https://github.com/zhukovsd) for creating the base chess game that served as the foundation for this enhanced version. Their work has been instrumental in making these improvements possible.
 
