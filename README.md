@@ -13,12 +13,12 @@ The en passant move has been implemented with additional visual cues and improve
 
 *Screenshot: En Passant move in action*
 
-### Castling
+### Castling (Upcoming)
 
 The castling mechanism has been refined to provide a smoother experience. Both kingside and queenside castling are now more clearly indicated and easier to perform.
 
 
-*Screenshot: Castling move demonstration*
+*Screenshot: Castling move demonstration* 
 
 ## 🛠️ Modifications
 
