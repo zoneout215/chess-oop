@@ -1,8 +1,8 @@
 package main.com.romanov;
 
 import main.com.romanov.board.Board;
-import main.com.romanov.piece.BoardConsoleRenderer;
 import main.com.romanov.board.BoardFactory;
+import main.com.romanov.piece.BoardConsoleRenderer;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,10 +14,9 @@ public class Main {
              //"1n1qk2r/8/8/2N3P1/P5P1/4B3/1P5P/RN1QK3 w HQka - 0 1"
             // default rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
             //1nbqk2r/8/8/6P1/P1B3P1/8/1P5P/RN1QK3 w Qk - 0 1
-
-        );
-        BoardConsoleRenderer renderer = new BoardConsoleRenderer();
-        Game game = new Game(board);
-        game.gameLoop();
+            );
+            BoardConsoleRenderer renderer = new BoardConsoleRenderer();
+            Game game = new Game(board);
+            game.gameLoop();
         }
     }
