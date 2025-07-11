@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.lang.Math.abs;
+import static main.com.romanov.Colour.*;
 
 public class Board {
     HashMap<Coordinates, Piece> pieces = new HashMap<>();
@@ -18,7 +19,11 @@ public class Board {
     final String startingFen;
     public List<Move> historyMoves = new ArrayList<>();
     public Board(String startingFen){this.startingFen = startingFen;}
+    public Colour colourToMove;
 
+    public void setActiveColour(Colour colour){
+        this.colourToMove = colour;
+    }
     public void setPiece(Coordinates coordinates, Piece piece) {
         piece.coordinates = coordinates;
         pieces.put(coordinates, piece);
@@ -29,6 +34,9 @@ public class Board {
     public Piece getPiece(Coordinates coordinates){
         return pieces.get(coordinates);
     }
+    public Colour getColourToMove(){return this.colourToMove;}
+
+
     public List<Piece> getPiecesByColour(Colour colour){
         List<Piece> result = new ArrayList<>();
         for (Piece piece: pieces.values()){
@@ -40,6 +48,17 @@ public class Board {
     }
 
     public void makeMove(Move move){
+
+        // Castles
+        // 1. Input should be either 0-0-0/0-0 o-o-o/o-o
+        // 2. Move should move two pieces
+        // 3. there should be check if there are pieces between a rook and a king
+        // - method in King
+        // 5. there should be a checking if a rook or a king have moved
+        // King cannot castle if:
+        // - he is under attack
+        // - any of the squares between him and a rook is attacked
+
         if (!historyMoves.isEmpty() && isEnpassant(move, historyMoves.getLast())) {
             Piece piece = getPiece(move.from);
             removePiece(historyMoves.getLast().to);
@@ -53,28 +72,6 @@ public class Board {
                 historyMoves.add(move);
             }
         }
-
-                            // remove a piece a coordinate.to - 1
-        //else remove a piece a coordinate.to + 1
-        //           historyMoves.add(move);
-        // }
-        // problems
-
-        // if (enPassantPossible){
-        // 1. first problem -> check if en passant possible:
-        // how to solve:
-        //  - check the previous move --> Problem: how to know the previous move was done by pawn
-        // -  check the coordinate of the near pawn
-        // -  check if the moved piece is Pawn
-        // -  overload getPieceMoves in Pawn, to pass historical moves
-        // - passing Move to the Pawn is hard, since usage of getPieceMoves is not unique
-        // - another possibility is to use isSquare available forAttack since it has Board and thus history moves
-        // - we need to override the isSquareAvailableForAttack in Pawn as we did in LongRangePiece
-        // 2. second problem -> how to eat a peace from the square which is different from the square to move
-        // how to solve:
-        // -  use isEnPassantMethod
-        // - if yes then use Overloaded method
-        //}
 
     public static boolean isSquareDark(Coordinates coordinates){
         return (((coordinates.file.ordinal() + 1) + coordinates.rank) % 2)==0;
@@ -103,7 +100,6 @@ public class Board {
                         && lastMove.from.file.ordinal() == move.to.file.ordinal()
                         && lastMovedPiece.colour != pieceToMove.colour
         );
-        int n = 3;
         return enPassantCondition && (move.to.file.ordinal() == lastMove.to.file.ordinal());
     }
 }

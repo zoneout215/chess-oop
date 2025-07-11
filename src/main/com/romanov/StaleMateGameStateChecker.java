@@ -8,7 +8,8 @@ import java.util.Set;
 
 public class StaleMateGameStateChecker extends GameStateChecker {
     @Override
-    public GameState check(Board board, Colour colour) {
+    public GameState check(Board board) {
+        Colour colour = board.getColourToMove();
         List<Piece> pieces = board.getPiecesByColour(colour);
 
         for (Piece piece : pieces){

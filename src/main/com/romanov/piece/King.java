@@ -29,7 +29,6 @@ public class King extends Piece{
     @Override
     protected boolean isSquareAvailable(Coordinates coordinates, Board board) {
         boolean result = super.isSquareAvailable(coordinates, board);
-
         if (result){
             return !board.isSquareAttackedByColour(coordinates, colour.opposite());
         }

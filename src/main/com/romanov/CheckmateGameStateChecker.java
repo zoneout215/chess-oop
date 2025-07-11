@@ -11,8 +11,9 @@ import java.util.Set;
 
 public class CheckmateGameStateChecker extends GameStateChecker {
     @Override
-    public GameState check(Board board, Colour colour) {
+    public GameState check(Board board) {
         // suppose that King is on the board
+        Colour colour = board.getColourToMove();
         Piece king = board.getPiecesByColour(colour).stream().filter(
                 piece -> piece instanceof King).findFirst().get();
         boolean s1 = board.isSquareAttackedByColour(king.coordinates, colour.opposite());
