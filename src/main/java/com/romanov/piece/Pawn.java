@@ -69,12 +69,13 @@ public class Pawn extends Piece {
         if (!board.historyMoves.isEmpty()) {
             Move lastMove = board.historyMoves.getLast();
             Piece lastMovedPiece = board.getPiece(lastMove.to);
-            int distanceToAttackedPawn = abs(lastMove.to.file.ordinal() - this.coordinates.file.ordinal());
+            int fileDifferenceToAttackedPawn = abs(lastMove.to.file.ordinal() - this.coordinates.file.ordinal());
             boolean enPassantCondition = (
                     lastMovedPiece instanceof Pawn
                     && abs(lastMove.from.rank - lastMove.to.rank) == 2
-                    && (distanceToAttackedPawn == 1)
-                    && lastMove.from.file.ordinal() == coordinates.file.ordinal()
+                    && abs(lastMove.to.rank - coordinates.rank) == 1 // The attacking and attacked pawns are on the same rank
+                    && (fileDifferenceToAttackedPawn == 1)
+                    && lastMove.from.file.ordinal() == coordinates.file.ordinal() // Pawn haven't taken
                     && lastMovedPiece.colour != this.colour
             );
             if (enPassantCondition){
