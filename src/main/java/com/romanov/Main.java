@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
         Board board = (new BoardFactory()).fromFEN(
 //                "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-                "r3kbn1/pppppppp/8/8/8/8/PPPPPPPP/RNBQK2R w KQq - 0 1"
+                "rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"
 //                "4k3/p2p2p1/8/1P2P3/5p1P/3KP3/6P1/8 w - - 0 1"
 //            "8/8/1N2r3/3k4/7B/2K5/1R3Q2/4p3 w - - 0 1r"
             //"1n1qk2r/8/4b3/2N3P1/P5P1/R3B3/1P5P/1N2K3 w k - 0 1"

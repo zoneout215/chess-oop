@@ -65,7 +65,7 @@ public class Pawn extends Piece {
 
     @Override
     protected boolean isSquareAvailableForAttack(Coordinates coordinates, Board board){
-        if (!board.historyMoves.isEmpty()) {
+        if (!board.historyMoves.isEmpty() && board.isEnPassantAvaliable(this, coordinates)) {
             Move lastMove = board.historyMoves.getLast();
             if (board.isEnPassantAvaliable(this, coordinates)){
                 if (colour == Colour.WHITE && lastMove.to.rank== 5){

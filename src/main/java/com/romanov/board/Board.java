@@ -72,16 +72,29 @@ public class Board {
         if (!historyMoves.isEmpty()) {
             Move lastMove = historyMoves.getLast();
             Piece lastMovedPiece = getPiece(lastMove.to);
-            int fileDifferenceToAttackedPawn = abs(lastMove.to.file.ordinal() - to.file.ordinal());
-            boolean enPassantCondition = (
-                    lastMovedPiece instanceof Pawn
-                            && (fileDifferenceToAttackedPawn == 1) // Pawns are on the adjacent files
-                            && abs(lastMove.to.rank - pawn.coordinates.rank) == 1 // The attacking and attacked pawns are on the same rank
-                            && abs(lastMove.from.rank - lastMove.to.rank) == 2 // Passed pawn moved 2 squares
-                            && lastMove.from.file.ordinal() == to.file.ordinal() // Passing pawn moves behind the passed Pawn
-                            && lastMovedPiece.colour != colourToMove // Pawns are the opposite colour
-            );
-            return enPassantCondition;
+            
+            if (lastMovedPiece instanceof Pawn && lastMovedPiece.colour != pawn.colour) {
+                // Check if enemy pawn moved 2 squares
+                boolean movedTwoSquares = abs(lastMove.from.rank - lastMove.to.rank) == 2;
+                
+                // Check if pawns are on adjacent files and same rank
+                boolean adjacentFiles = abs(lastMove.to.file.ordinal() - pawn.coordinates.file.ordinal()) == 1;
+                boolean sameRank = lastMove.to.rank == pawn.coordinates.rank;
+                
+                // Check if target square is behind the enemy pawn
+                boolean correctTargetSquare = to.file.ordinal() == lastMove.to.file.ordinal();
+                
+                // Check target rank based on pawn color
+                boolean correctTargetRank;
+                if (pawn.colour == Colour.WHITE) {
+                    correctTargetRank = to.rank == lastMove.to.rank + 1; // White moves up
+                } else {
+                    correctTargetRank = to.rank == lastMove.to.rank - 1; // Black moves down
+                }
+                
+                return movedTwoSquares && adjacentFiles && sameRank && 
+                    correctTargetSquare && correctTargetRank;
+            }
         }
         return false;
     }
