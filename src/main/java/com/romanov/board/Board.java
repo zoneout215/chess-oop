@@ -3,20 +3,28 @@ package com.romanov.board;
 
 import com.romanov.Colour;
 import com.romanov.Coordinates;
+import com.romanov.File;
 import com.romanov.piece.*;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
 
 public class Board {
     HashMap<Coordinates, Piece> pieces = new HashMap<>();
-
     final String startingFen;
     public List<Move> historyMoves = new ArrayList<>();
     public Board(String startingFen){this.startingFen = startingFen;}
     public Colour colourToMove;
+    public HashMap<String, Boolean> castlingRights = new HashMap<>(Map.of(
+            "WHITE_KINGSIDE", true,
+            "WHITE_QUEENSIDE", true,
+            "BLACK_KINGSIDE", true,
+            "BLACK_QUEENSIDE", true
+        ));
 
     public void setActiveColour(Colour colour){
         this.colourToMove = colour;
@@ -28,12 +36,11 @@ public class Board {
     public void removePiece(Coordinates coordinates){
         pieces.remove(coordinates);
     }
+
     public Piece getPiece(Coordinates coordinates){
         return pieces.get(coordinates);
     }
-    public Colour getColourToMove(){return this.colourToMove;}
-
-
+    public Colour getColourToMove() {return this.colourToMove;}
     public List<Piece> getPiecesByColour(Colour colour){
         List<Piece> result = new ArrayList<>();
         for (Piece piece: pieces.values()){
@@ -43,32 +50,6 @@ public class Board {
         }
         return result;
     }
-
-    public void makeMove(Move move){
-
-        // Castles
-        // 1. Input should be either 0-0-0/0-0 o-o-o/o-o
-        // 2. Move should move two pieces
-        // 3. there should be check if there are pieces between a rook and a king
-        // - method in King
-        // 5. there should be a checking if a rook or a king have moved
-        // King cannot castle if:
-        // - he is under attack
-        // - any of the squares between him and a rook is attacked
-
-        if (!historyMoves.isEmpty() && isEnpassant(move, historyMoves.getLast())) {
-            Piece piece = getPiece(move.from);
-            removePiece(historyMoves.getLast().to);
-            removePiece(move.from);
-            setPiece(move.to, piece);
-            historyMoves.add(move);
-        } else {
-                Piece piece = getPiece(move.from);
-                removePiece(move.from);
-                setPiece(move.to, piece);
-                historyMoves.add(move);
-            }
-        }
 
     public static boolean isSquareDark(Coordinates coordinates){
         return (((coordinates.file.ordinal() + 1) + coordinates.rank) % 2)==0;
@@ -103,6 +84,73 @@ public class Board {
             return enPassantCondition;
         }
         return false;
+    }
+
+    public boolean isCastlingKingSideAvailable(Colour colour){
+        String key = colour == Colour.WHITE ? "WHITE_KINGSIDE" : "BLACK_KINGSIDE";
+        if (!castlingRights.getOrDefault(key, false)) {
+            return false;
+        }
+       // Check if squares between king and rook are empty
+        int rank = colour == Colour.WHITE ? 1 : 8;
+        Coordinates[] squaresToCheck = {
+            new Coordinates(File.F, rank),
+            new Coordinates(File.G, rank), 
+        };
+        
+        // Check if any square has a piece (should be empty for castling)
+        for (Coordinates coord : squaresToCheck) {
+            if (!isSquareEmpty(coord)) {
+                return false;  // Path is blocked
+            }
+        }
+        
+        return true;
+    }
+
+    public boolean isCastlingQueenSideAvailable(Colour colour) {
+        // Check castling rights first
+        String key = colour == Colour.WHITE ? "WHITE_QUEENSIDE" : "BLACK_QUEENSIDE";
+        if (!castlingRights.getOrDefault(key, false)) {
+            return false;
+        }
+        
+        // Check if squares between king and rook are empty
+        int rank = colour == Colour.WHITE ? 1 : 8;
+        Coordinates[] squaresToCheck = {
+            new Coordinates(File.B, rank),  // b1/b8
+            new Coordinates(File.C, rank),  // c1/c8
+            new Coordinates(File.D, rank)   // d1/d8
+        };
+        
+        // Check if any square has a piece (should be empty for castling)
+        for (Coordinates coord : squaresToCheck) {
+            if (!isSquareEmpty(coord)) {
+                return false;  // Path is blocked
+            }
+        }
+        
+        return true;
+    }
+
+    public void removeCastlingKingSide(){
+        if (colourToMove == Colour.WHITE) {
+            this.castlingRights.put("K", false);
+        } else {
+            this.castlingRights.put("k", false);
+        }
+    }
+    public void removeCastlingQueenSide(){
+        if (colourToMove == Colour.WHITE) {
+            this.castlingRights.put("Q", false);
+        } else {
+            this.castlingRights.put("q", false);
+        }
+    }
+
+    public void makeMove(Move move){
+        move.execute(this);
+        historyMoves.add(move);
     }
 }
 

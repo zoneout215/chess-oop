@@ -14,13 +14,13 @@ public class MoveStandard extends Move{
         board.setPiece(to, piece);
         board.removePiece(from);
         if (piece instanceof King){
-            board.removeCastlingKingSide(board.colourToMove);
-            board.removeCastlingQueenSide(board.colourToMove);
+            board.removeCastlingKingSide();
+            board.removeCastlingQueenSide();
         }
         if (piece instanceof Rook && piece.coordinates.file == File.H){
-            board.removeCastlingKingSide(board.colourToMove);
+            board.removeCastlingKingSide();
         } else if (piece instanceof Rook && piece.coordinates.file == File.A){
-            board.removeCastlingQueenSide(board.colourToMove);
+            board.removeCastlingQueenSide();
         }
     };    
 }

@@ -3,6 +3,7 @@ package com.romanov.piece;
 import com.romanov.Colour;
 import com.romanov.Coordinates;
 import com.romanov.CoordinatesShift;
+import com.romanov.File;
 import com.romanov.board.Board;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,11 @@ public class King extends Piece{
                 result.add(new CoordinatesShift(fileShift, rankShift));
             }
         }
+        if (isKingOnStartingSquare()) {
+            result.add(new CoordinatesShift(2, 0));   // Kingside castling
+            result.add(new CoordinatesShift(-2, 0));  // Queenside castling
+        }
+    
         return result;
     }
 
@@ -31,7 +37,18 @@ public class King extends Piece{
         if (result){
             return !board.isSquareAttackedByColour(coordinates, colour.opposite());
         }
+        int kingRank = this.colour == Colour.WHITE ? 1 : 8;
+        if( coordinates == new Coordinates(File.G, kingRank)){
+            return board.isCastlingKingSideAvailable(colour);
+        }
+        if( coordinates == new Coordinates(File.C, kingRank)){
+            return board.isCastlingQueenSideAvailable(colour);
+        }
+        
         return false;
     }
 
+    public boolean  isKingOnStartingSquare(){
+        return this.coordinates.file ==File.E && (this.coordinates.rank == 1 || this.coordinates.rank == 8 ); 
+    }
 }

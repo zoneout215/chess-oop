@@ -5,16 +5,12 @@ import com.romanov.Coordinates;
 import com.romanov.File;
 import com.romanov.piece.*;
 
-import static java.lang.Math.abs;
-
 public class MoveFactory {
     public static Move createMove(Coordinates from, Coordinates to, Board board, Piece piece) {
         // Detect castling
-        // TODO add the check of the availability of castling, if the king or neeed squares
-        //  needed are under attack. or if there are pieces in between
-//        if (isCastling(from, to, board)) {
-//            return createCastlingMove(from, to, board);
-//        }
+        if(piece instanceof King && Math.abs(from.file.ordinal() - to.file.ordinal()) == 2){
+            return createCastlingMove(from, to, board);
+        }
         if (board.isEnPassantAvaliable(piece, to)){
             return new MoveEnPassant(from, to);
         }
@@ -44,8 +40,4 @@ public class MoveFactory {
         Coordinates rookTo = new Coordinates(fileTo, rank); 
         return new MoveCastles(kingFrom, kingTo, rookFrom, rookTo);
     }
-
-//    public static isCastling(Coordinates from,Coordinates to, Board board){
-//        piece instanceof King && Math.abs(from.file.ordinal() - to.file.ordinal()) == 2
-//    }
 }

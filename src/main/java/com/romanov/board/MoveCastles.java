@@ -22,7 +22,9 @@ public class MoveCastles extends Move {
         board.removePiece(from);
         // rookMoves
         board.setPiece(rookTo, board.getPiece(rookFrom));
-        board.removePiece(rookFrom);        
+        board.removePiece(rookFrom);
+        board.removeCastlingKingSide();
+        board.removeCastlingQueenSide();
     }
 }
 

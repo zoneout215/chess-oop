@@ -17,7 +17,6 @@ public class Game {
     Game(Board board){this.board = board;}
 
     public void gameLoop(){
-        Colour colorToMove = Colour.WHITE; // add reading from FEN
         GameState gameState = determineGameState(board);
         while(gameState == GameState.ONGOING) {
             renderer.render(board);
@@ -27,12 +26,12 @@ public class Game {
                 System.out.println("Blacks' turn");
             }
             Move move = InputCoordinates.inputMove(board, board.getColourToMove(), renderer);
-
             // make move
             board.makeMove(move);
             // pass move
-            board.setActiveColour(colorToMove.opposite());
+            board.setActiveColour(board.getColourToMove().opposite());
             gameState = determineGameState(board);
+
         }
         renderer.render(board);
         System.out.println("Game ended with an outcome of " + gameState);

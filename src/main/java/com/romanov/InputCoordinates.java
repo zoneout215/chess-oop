@@ -93,8 +93,6 @@ public class InputCoordinates {
             Coordinates sourceCoordinates = InputCoordinates.inputPieceCoordinatesForColour(
                     colour, board);
             Piece piece = board.getPiece(sourceCoordinates);
-            
-            // check input
             Set<Coordinates> accessibleSquares = piece.getAccessibleSquares(board);
             renderer.render(board, piece);
             Coordinates targetCoordinates = InputCoordinates.inputAvailableSquare(accessibleSquares);
