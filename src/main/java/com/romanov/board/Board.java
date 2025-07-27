@@ -86,18 +86,23 @@ public class Board {
         }
         return false;
     }
-    public boolean isEnpassant(Move move, Move lastMove) {
-        Piece lastMovedPiece = getPiece(lastMove.to);
-        Piece pieceToMove = getPiece((move.from));
-        int distanceToAttackedPawn = abs(lastMove.to.file.ordinal() - move.from.file.ordinal());
-        boolean enPassantCondition = (
-                lastMovedPiece instanceof Pawn
-                        && abs(lastMove.from.rank - lastMove.to.rank) == 2
-                        && (distanceToAttackedPawn == 1)
-                        && lastMove.from.file.ordinal() == move.to.file.ordinal()
-                        && lastMovedPiece.colour != pieceToMove.colour
-        );
-        return enPassantCondition && (move.to.file.ordinal() == lastMove.to.file.ordinal());
+    
+    public boolean isEnPassantAvaliable(Piece pawn, Coordinates to){
+        if (!historyMoves.isEmpty()) {
+            Move lastMove = historyMoves.getLast();
+            Piece lastMovedPiece = getPiece(lastMove.to);
+            int fileDifferenceToAttackedPawn = abs(lastMove.to.file.ordinal() - to.file.ordinal());
+            boolean enPassantCondition = (
+                    lastMovedPiece instanceof Pawn
+                            && (fileDifferenceToAttackedPawn == 1) // Pawns are on the adjacent files
+                            && abs(lastMove.to.rank - pawn.coordinates.rank) == 1 // The attacking and attacked pawns are on the same rank
+                            && abs(lastMove.from.rank - lastMove.to.rank) == 2 // Passed pawn moved 2 squares
+                            && lastMove.from.file.ordinal() == to.file.ordinal() // Passing pawn moves behind the passed Pawn
+                            && lastMovedPiece.colour != colourToMove // Pawns are the opposite colour
+            );
+            return enPassantCondition;
+        }
+        return false;
     }
 }
 

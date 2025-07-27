@@ -65,20 +65,9 @@ public class Pawn extends Piece {
 
     @Override
     protected boolean isSquareAvailableForAttack(Coordinates coordinates, Board board){
-        // EnPassant
         if (!board.historyMoves.isEmpty()) {
             Move lastMove = board.historyMoves.getLast();
-            Piece lastMovedPiece = board.getPiece(lastMove.to);
-            int fileDifferenceToAttackedPawn = abs(lastMove.to.file.ordinal() - this.coordinates.file.ordinal());
-            boolean enPassantCondition = (
-                    lastMovedPiece instanceof Pawn
-                    && abs(lastMove.from.rank - lastMove.to.rank) == 2
-                    && abs(lastMove.to.rank - coordinates.rank) == 1 // The attacking and attacked pawns are on the same rank
-                    && (fileDifferenceToAttackedPawn == 1)
-                    && lastMove.from.file.ordinal() == coordinates.file.ordinal() // Pawn haven't taken
-                    && lastMovedPiece.colour != this.colour
-            );
-            if (enPassantCondition){
+            if (board.isEnPassantAvaliable(this, coordinates)){
                 if (colour == Colour.WHITE && lastMove.to.rank== 5){
                     return true;
                 } else if (colour == Colour.BLACK && lastMove.to.rank == 4){
@@ -87,7 +76,8 @@ public class Pawn extends Piece {
                     return false;
                 }
             }
-        };
+        }
+       // Classical attacks are handled by getPieceAttacks method 
         return false;
     }
 
@@ -100,9 +90,9 @@ public class Pawn extends Piece {
                     this.coordinates, coordinates);
                 return (board.isSquareEmpty(coordinatesBetween.getFirst())) && board.isSquareEmpty(coordinates);
             } else {
-
                 return (board.isSquareEmpty(coordinates));
             }
+
         } else {
             if (board.isSquareEmpty(coordinates)){
                 return false;
