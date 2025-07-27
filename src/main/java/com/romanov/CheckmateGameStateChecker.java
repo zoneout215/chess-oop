@@ -3,6 +3,7 @@ package com.romanov;
 import com.romanov.board.Board;
 import com.romanov.board.BoardFactory;
 import com.romanov.board.Move;
+import com.romanov.board.MoveFactory;
 import com.romanov.piece.King;
 import com.romanov.piece.Piece;
 import java.util.List;
@@ -26,9 +27,14 @@ public class CheckmateGameStateChecker extends GameStateChecker {
 
             for (Coordinates coordinates : accessibleSquares) {
                 Board clone = new BoardFactory().copy(board);
-                clone.makeMove(new Move(piece.coordinates, coordinates));
+                // should try to make only EnPassant or Standart move, 
+                // because with King under attack castles isnot possible   
+                Move move = MoveFactory.createMove(piece.coordinates, coordinates, board, piece);
+                clone.makeMove(move);
+                
                 Piece clonedKing = clone.getPiecesByColour(colour).stream().filter(
                         p -> p instanceof King).findFirst().get();
+
                 if (!clone.isSquareAttackedByColour(clonedKing.coordinates, colour.opposite())){
                     return GameState.ONGOING;
                 }

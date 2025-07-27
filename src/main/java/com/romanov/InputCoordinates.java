@@ -3,6 +3,7 @@ package com.romanov;
 import com.romanov.board.Board;
 import com.romanov.board.BoardFactory;
 import com.romanov.board.Move;
+import com.romanov.board.MoveFactory;
 import com.romanov.piece.BoardConsoleRenderer;
 import com.romanov.piece.King;
 import com.romanov.piece.Piece;
@@ -92,11 +93,12 @@ public class InputCoordinates {
             Coordinates sourceCoordinates = InputCoordinates.inputPieceCoordinatesForColour(
                     colour, board);
             Piece piece = board.getPiece(sourceCoordinates);
+            
             // check input
             Set<Coordinates> accessibleSquares = piece.getAccessibleSquares(board);
             renderer.render(board, piece);
             Coordinates targetCoordinates = InputCoordinates.inputAvailableSquare(accessibleSquares);
-            Move move = new Move(sourceCoordinates, targetCoordinates);
+            Move move = MoveFactory.createMove(sourceCoordinates, targetCoordinates, board, piece);
 
             if (checkIfKingUnderAttack(board, colour, move)) {
                 System.out.println("Your king is under attack! Either block or move the king!");
